@@ -1,4 +1,4 @@
-header {
+.topo {
   position: relative;
   padding: 10px;
 }
@@ -9,6 +9,6 @@ header {
   top: 10px;
 }
 
-header h1 {
+.topo h1 {
   text-align: center;
 }
