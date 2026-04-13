@@ -1,8 +1,9 @@
-h1 {
-  text-align: center;
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #login {
-  margin-left: 80%;
-  margin-top: 80%;
+  margin: 0;
 }
