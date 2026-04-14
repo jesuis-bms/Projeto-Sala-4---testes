@@ -22,6 +22,6 @@ a{
   text-decoration: none;
 }
 
-a:hover, a:visited{
+a:hover{
   color: #79c096;
 }
