@@ -7,6 +7,11 @@
   text-align: center;
 }
 
+.salas {
+  text-align: center;
+  font-size: 20px;
+}
+
 .atividades {
   display: flex;
   justify-content: center;
@@ -14,16 +19,13 @@
   flex-wrap: wrap;
 }
 
-#salas {
-  text-align: center;
-  font-size: 20px;
-}
 #atividades-704,
 #atividades-705 {
   background-color: #5d7c43;
   padding: 20px;
   width: 150px;
   text-align: center;
+  cursor: pointer;
 }
 
 #login {
@@ -33,15 +35,30 @@
   height: 20px;
 }
 
+#agradecimentos {
+  text-align: center;
+  background-color: grey;
+  color: white;
+  max-width: 100%;
+  padding: 10%;
+}
+
 body {
   background-color: #dde9d4;
 }
 
 a {
   text-decoration: none;
-  cursor: pointer;
 }
 
 a:hover {
   color: #79c096;
+}
+
+li {
+  list-style: square;
+}
+
+span {
+  color: rgb(127, 202, 192);
 }
