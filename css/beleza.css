@@ -17,3 +17,11 @@
 body{
   background-color: #dde9d4
 }
+
+a{
+  text-decoration: none;
+}
+
+a:hover, a:visited{
+  color: #79c096;
+}
