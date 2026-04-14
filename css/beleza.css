@@ -12,16 +12,19 @@
   font-size: 20px;
 }
 
-#atividades-704 {
-  background-color: #5d7c43;
-  cursor: pointer;
-  padding: 40px;
+.atividades {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
+#atividades-704,
 #atividades-705 {
   background-color: #5d7c43;
-  cursor: pointer;
-  padding: 40px;
+  padding: 20px;
+  width: 150px;
+  text-align: center;
 }
 
 #login {
