@@ -7,11 +7,6 @@
   text-align: center;
 }
 
-.salas {
-  text-align: center;
-  font-size: 20px;
-}
-
 .atividades {
   display: flex;
   justify-content: center;
@@ -27,6 +22,11 @@
 
 .sumario.show {
   display: block;
+}
+
+#salas {
+  text-align: center;
+  font-size: 20px;
 }
 
 #fecharModal-sala4,
@@ -58,24 +58,34 @@
 
 #sumario-btn {
   background-color: #5d7c43;
+  text-align: center;
   cursor: pointer;
   display: inline-block;
   color: white;
   border-radius: 5px;
   text-decoration: none;
+  transition: all 0.25s ease;
   position: absolute;
   right: 10px;
   top: 10px;
   height: 20px;
 }
 
+#sumario-btn:hover {
+  background: #a3d67c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px #1342029c;
+}
+
 #login {
   background-color: #5d7c43;
+  text-align: center;
   cursor: pointer;
   display: inline-block;
   color: white;
   border-radius: 5px;
   text-decoration: none;
+  transition: all 0.25s ease;
   position: absolute;
   left: 10px;
   top: 10px;
@@ -83,7 +93,9 @@
 }
 
 #login:hover {
-  background-color: #a3d67c;
+  background: #a3d67c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px #1342029c;
 }
 
 #agradecimentos {
