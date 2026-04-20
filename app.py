@@ -43,7 +43,7 @@ def seed_default_user():
             if not existe:
                 cursor.execute(
                     "INSERT INTO users (usuario, senha) VALUES (%s, %s)",
-                    ("admin", "1234")
+                    ("Deadlife", "67889")
                 )
         conn.commit()
 
