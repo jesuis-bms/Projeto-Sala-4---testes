@@ -29,6 +29,7 @@
   font-size: 20px;
 }
 
+.add-cont,
 #logar,
 #fecharlogin-modal,
 #materias-sala4,
@@ -38,7 +39,6 @@
 #atividades-704,
 #atividades-705 {
   background-color: #5d7c43;
-  padding: 20px;
   width: 150px;
   text-align: center;
   cursor: pointer;
@@ -51,6 +51,7 @@
   transition: all 0.25s ease;
 }
 
+.add-cont:hover,
 #logar:hover,
 #fecharlogin-modal:hover,
 #fecharModal-sala4:hover,
@@ -111,6 +112,20 @@
   color: white;
   max-width: 100%;
   padding: 10%;
+}
+
+.enviar,
+#login-form {
+  padding: 20px;
+  width: 200px;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.25s ease;
 }
 
 body {
