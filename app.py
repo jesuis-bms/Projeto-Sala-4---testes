@@ -59,27 +59,27 @@ def criar_admin():
 
 @app.route("/login", methods=["POST"])
 def logar():
-    usuario = request.form.get("user")
-    senha = request.form.get("senha")
-
-    if not usuario or usuario.strip() == "":
-        return "Usuário inválido."
-    if not senha or senha.strip() == "":
-        return "Senha inválida."
+    usuario = request.form.get("user", "").strip()
+    senha = request.form.get("senha", "").strip()
 
     conn, cursor = get_db()
+
+    cursor.execute("SELECT id, usuario, senha FROM users")
+    todos = cursor.fetchall()
+
     cursor.execute(
         "SELECT * FROM users WHERE usuario = ? AND senha = ?",
         (usuario, senha)
     )
     usuario_encontrado = cursor.fetchone()
+
     conn.close()
 
     if usuario_encontrado:
         session["usuario"] = usuario
         return redirect(url_for("home"))
     else:
-        return "Login inválido."
+        return f"Login inválido. Recebi user={usuario!r}, senha={senha!r}, banco={todos!r}"
 
 @app.route("/logout", methods=["POST"])
 def logout():
