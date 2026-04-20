@@ -36,7 +36,7 @@ def seed_default_user():
         with conn.cursor() as cursor:
             cursor.execute(
                 "SELECT 1 FROM users WHERE usuario = %s",
-                ("admin",)
+                ("Daredevil",)
             )
             existe = cursor.fetchone()
 
