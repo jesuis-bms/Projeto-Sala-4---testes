@@ -92,7 +92,8 @@ def filtroSala(sala):
 
     conn.close()
 
-    return render_template("index.html", atividades=atividades)
+    logado = "usuario" in session
+    return render_template("index.html", atividades=atividades, logado=logado)
 
 @app.route("/enviar", methods=["POST"])
 def enviar():
