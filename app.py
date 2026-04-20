@@ -1,89 +1,87 @@
-import sqlite3
+import os
+import psycopg
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
-app.secret_key = "q0d10v31."
+app.secret_key = os.environ.get("SECRET_KEY", "troque-isso-agora")
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db():
-    conn = sqlite3.connect("database.db")
-    cursor = conn.cursor()
-    return conn, cursor
-
+    return psycopg.connect(DATABASE_URL)
 
 def create_table():
-    conn, cursor = get_db()
+    with get_db() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id SERIAL PRIMARY KEY,
+                    usuario TEXT NOT NULL UNIQUE,
+                    senha TEXT NOT NULL
+                );
+            """)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS atividades (
+                    id SERIAL PRIMARY KEY,
+                    titulo TEXT NOT NULL,
+                    descricao TEXT NOT NULL,
+                    materia TEXT NOT NULL,
+                    sala TEXT NOT NULL
+                );
+            """)
+        conn.commit()
 
-    cursor.executescript("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        usuario TEXT NOT NULL UNIQUE,
-        senha TEXT NOT NULL
-    );
-    CREATE TABLE IF NOT EXISTS atividades (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        titulo TEXT NOT NULL,
-        descricao TEXT NOT NULL,
-        materia TEXT NOT NULL,
-        sala TEXT NOT NULL 
-    );
-    """)
+def seed_default_user():
+    with get_db() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "SELECT 1 FROM users WHERE usuario = %s",
+                ("admin",)
+            )
+            existe = cursor.fetchone()
 
-    conn.commit()
-    conn.close()
-
+            if not existe:
+                cursor.execute(
+                    "INSERT INTO users (usuario, senha) VALUES (%s, %s)",
+                    ("Deadlife", "67889")
+                )
+        conn.commit()
 
 create_table()
+seed_default_user()
 
 @app.route("/")
 def home():
-    conn, cursor = get_db()
-
-    cursor.execute("SELECT * FROM atividades ORDER BY id DESC")
-    atividades = cursor.fetchall()
-
-    conn.close()
+    with get_db() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT id, titulo, descricao, materia, sala FROM atividades ORDER BY id DESC")
+            atividades = cursor.fetchall()
 
     logado = "usuario" in session
     return render_template("index.html", atividades=atividades, logado=logado)
-
-@app.route("/criar-teste")
-def criar_teste():
-    conn, cursor = get_db()
-    try:
-        cursor.execute(
-            "INSERT INTO users (usuario, senha) VALUES (?, ?)",
-            ("Deadlife", "67889")
-        )
-        conn.commit()
-        msg = "Usuário teste criado."
-    except Exception as e:
-        msg = f"Erro ao criar: {e}"
-    conn.close()
-    return msg
 
 @app.route("/login", methods=["POST"])
 def logar():
     usuario = request.form.get("user", "").strip()
     senha = request.form.get("senha", "").strip()
 
-    conn, cursor = get_db()
+    if not usuario:
+        return "Usuário inválido."
+    if not senha:
+        return "Senha inválida."
 
-    cursor.execute("SELECT id, usuario, senha FROM users")
-    todos = cursor.fetchall()
-
-    cursor.execute(
-        "SELECT * FROM users WHERE usuario = ? AND senha = ?",
-        (usuario, senha)
-    )
-    usuario_encontrado = cursor.fetchone()
-
-    conn.close()
+    with get_db() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "SELECT id FROM users WHERE usuario = %s AND senha = %s",
+                (usuario, senha)
+            )
+            usuario_encontrado = cursor.fetchone()
 
     if usuario_encontrado:
         session["usuario"] = usuario
         return redirect(url_for("home"))
-    else:
-        return f"Login inválido. Recebi user={usuario!r}, senha={senha!r}, banco={todos!r}"
+    return "Login inválido."
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -91,92 +89,79 @@ def logout():
     return redirect(url_for("home"))
 
 def block():
-    if "usuario" not in session:
-        return True
-    return False
+    return "usuario" not in session
 
 @app.route("/sala/<sala>")
 def filtroSala(sala):
-    conn, cursor = get_db()
-    cursor.execute(
-        "SELECT * FROM atividades WHERE sala = ?",
-        (sala,)
-    )
-    atividades = cursor.fetchall()
-
-    conn.close()
+    with get_db() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "SELECT id, titulo, descricao, materia, sala FROM atividades WHERE sala = %s",
+                (sala,)
+            )
+            atividades = cursor.fetchall()
 
     logado = "usuario" in session
     return render_template("index.html", atividades=atividades, logado=logado)
 
 @app.route("/enviar", methods=["POST"])
 def enviar():
-
     if block():
         return "Acesso negado."
 
-    conn, cursor = get_db()
+    titulo = request.form.get("titulo", "").strip()
+    descricao = request.form.get("descricao", "").strip()
+    sala = request.form.get("sala", "").strip()
+    materia = request.form.get("materia", "").strip()
 
-    titulo = request.form.get("titulo")
-    descricao = request.form.get("descricao")
-    sala = request.form.get("sala")
-    materia = request.form.get("materia")
-
-    if not titulo or titulo.strip() == "":
+    if not titulo:
         return "Título inválido. Digite algo."
-    elif not descricao or descricao.strip() == "":
+    if not descricao:
         return "Descrição inválida. Digite algo."
-    elif not sala or sala.strip() == "":
+    if not sala:
         return "Sala inválida. Tente novamente."
-    elif not materia or materia.strip() == "":
+    if not materia:
         return "Matéria inválida. Tente novamente."
-    
-    cursor.execute(
-        "INSERT INTO atividades (titulo, descricao, sala, materia) VALUES (?, ?, ?, ?)",
-        (titulo, descricao, sala, materia)
-    )
-    
-    conn.commit()
-    conn.close()
+
+    with get_db() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO atividades (titulo, descricao, sala, materia) VALUES (%s, %s, %s, %s)",
+                (titulo, descricao, sala, materia)
+            )
+        conn.commit()
 
     return redirect(url_for("filtroSala", sala=sala))
-    
 
 @app.route("/update/<int:id>", methods=["POST"])
 def editar(id):
-
     if block():
         return "Acesso negado."
-    
-    novoTitulo = request.form.get("titulo")
-    novaDescricao = request.form.get("descricao")
-    novaMateria = request.form.get("materia")
-    sala = request.form.get("sala")
 
-    conn, cursor = get_db()
+    novoTitulo = request.form.get("titulo", "").strip()
+    novaDescricao = request.form.get("descricao", "").strip()
+    novaMateria = request.form.get("materia", "").strip()
+    sala = request.form.get("sala", "").strip()
 
-    cursor.execute(
-        "UPDATE atividades SET titulo = ?, descricao = ?, materia = ? WHERE id = ?",
-        (novoTitulo, novaDescricao, novaMateria, id)
-    )
-
-    conn.commit()
-    conn.close()
+    with get_db() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "UPDATE atividades SET titulo = %s, descricao = %s, materia = %s WHERE id = %s",
+                (novoTitulo, novaDescricao, novaMateria, id)
+            )
+        conn.commit()
 
     return redirect(url_for("filtroSala", sala=sala))
 
 @app.route("/delete/<int:id>", methods=["POST"])
 def delete(id):
-
     if block():
         return "Acesso negado."
-    
-    conn, cursor = get_db()
 
-    cursor.execute("DELETE FROM atividades WHERE id = ?", (id,))
-
-    conn.commit()
-    conn.close()
+    with get_db() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("DELETE FROM atividades WHERE id = %s", (id,))
+        conn.commit()
 
     return redirect(url_for("home"))
 
