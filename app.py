@@ -3,7 +3,7 @@ import psycopg
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "troque-isso-agora")
+app.secret_key = os.environ.get("SECRET_KEY", "troque-isso")
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -18,7 +18,7 @@ def create_table():
                     id SERIAL PRIMARY KEY,
                     usuario TEXT NOT NULL UNIQUE,
                     senha TEXT NOT NULL
-                );
+                )
             """)
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS atividades (
@@ -27,7 +27,7 @@ def create_table():
                     descricao TEXT NOT NULL,
                     materia TEXT NOT NULL,
                     sala TEXT NOT NULL
-                );
+                )
             """)
         conn.commit()
 
@@ -43,7 +43,7 @@ def seed_default_user():
             if not existe:
                 cursor.execute(
                     "INSERT INTO users (usuario, senha) VALUES (%s, %s)",
-                    ("Deadlife", "67889")
+                    ("admin", "1234")
                 )
         conn.commit()
 
@@ -54,7 +54,11 @@ seed_default_user()
 def home():
     with get_db() as conn:
         with conn.cursor() as cursor:
-            cursor.execute("SELECT id, titulo, descricao, materia, sala FROM atividades ORDER BY id DESC")
+            cursor.execute("""
+                SELECT id, titulo, descricao, materia, sala
+                FROM atividades
+                ORDER BY id DESC
+            """)
             atividades = cursor.fetchall()
 
     logado = "usuario" in session
@@ -95,10 +99,11 @@ def block():
 def filtroSala(sala):
     with get_db() as conn:
         with conn.cursor() as cursor:
-            cursor.execute(
-                "SELECT id, titulo, descricao, materia, sala FROM atividades WHERE sala = %s",
-                (sala,)
-            )
+            cursor.execute("""
+                SELECT id, titulo, descricao, materia, sala
+                FROM atividades
+                WHERE sala = %s
+            """, (sala,))
             atividades = cursor.fetchall()
 
     logado = "usuario" in session
@@ -125,10 +130,10 @@ def enviar():
 
     with get_db() as conn:
         with conn.cursor() as cursor:
-            cursor.execute(
-                "INSERT INTO atividades (titulo, descricao, sala, materia) VALUES (%s, %s, %s, %s)",
-                (titulo, descricao, sala, materia)
-            )
+            cursor.execute("""
+                INSERT INTO atividades (titulo, descricao, sala, materia)
+                VALUES (%s, %s, %s, %s)
+            """, (titulo, descricao, sala, materia))
         conn.commit()
 
     return redirect(url_for("filtroSala", sala=sala))
@@ -145,10 +150,11 @@ def editar(id):
 
     with get_db() as conn:
         with conn.cursor() as cursor:
-            cursor.execute(
-                "UPDATE atividades SET titulo = %s, descricao = %s, materia = %s WHERE id = %s",
-                (novoTitulo, novaDescricao, novaMateria, id)
-            )
+            cursor.execute("""
+                UPDATE atividades
+                SET titulo = %s, descricao = %s, materia = %s
+                WHERE id = %s
+            """, (novoTitulo, novaDescricao, novaMateria, id))
         conn.commit()
 
     return redirect(url_for("filtroSala", sala=sala))
