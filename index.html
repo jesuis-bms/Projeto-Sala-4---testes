@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Projeto Sala 4</title>
     <link rel="icon" href="img/logo.emdb.ico" />
-    <link rel="stylesheet" href="{{ url_for('css', filename='beleza.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='beleza.css') }}" />
   </head>
   <body>
     <header>
@@ -188,6 +188,6 @@
       </p>
       <p>Site desenvolvido por <span>Bernard Luiz Marques da Silva</span>.</p>
     </div>
-    <script src="{{ url_for(filename='index.js') }}"></script>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
   </body>
 </html>
