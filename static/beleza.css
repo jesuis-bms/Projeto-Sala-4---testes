@@ -1,0 +1,141 @@
+.topo {
+  position: relative;
+  padding: 10px;
+}
+
+.topo h1 {
+  text-align: center;
+}
+
+.atividades {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.sumario {
+  display: none;
+  width: 50%;
+  padding: 10px;
+}
+
+.sumario.show {
+  display: block;
+}
+
+#salas {
+  text-align: center;
+  font-size: 20px;
+}
+
+#logar,
+#fecharlogin-modal,
+#materias-sala4,
+#materias-sala5,
+#fecharModal-sala4,
+#fecharModal-sala5,
+#atividades-704,
+#atividades-705 {
+  background-color: #5d7c43;
+  padding: 20px;
+  width: 150px;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  color: white;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+#logar:hover,
+#fecharlogin-modal:hover,
+#fecharModal-sala4:hover,
+#fecharModal-sala5:hover,
+#atividades-704:hover,
+#atividades-705:hover {
+  background: #a3d67c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px #1342029c;
+}
+
+#sumario-btn {
+  background-color: #5d7c43;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: 20px;
+}
+
+#sumario-btn:hover {
+  background: #a3d67c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px #1342029c;
+}
+
+#logout, #login {
+  background-color: #5d7c43;
+  text-align: center;
+  cursor: pointer;
+  display: inline-block;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  height: 20px;
+}
+
+#logout:hover,
+#login:hover {
+  background: #a3d67c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px #1342029c;
+}
+
+#agradecimentos {
+  text-align: center;
+  background-color: grey;
+  color: white;
+  max-width: 100%;
+  padding: 10%;
+}
+
+body {
+  background: linear-gradient(to bottom, #dde9d4, #a3d67c, #5d7c43);
+}
+
+a {
+  text-decoration: none;
+}
+
+dialog {
+  background: linear-gradient(to bottom, #dde9d4, #a3d67c, #5d7c43);
+  max-width: 85%;
+  max-height: 85%;
+  text-align: center;
+}
+
+a:hover {
+  color: #79c096;
+}
+
+li {
+  list-style: square;
+}
+
+span {
+  color: rgb(127, 202, 192);
+}
