@@ -1,11 +1,14 @@
 import os
 import psycopg
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "troque-isso")
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql://postgres:1234@localhost:5432/teste"
+)
 
 def get_db():
     return psycopg.connect(DATABASE_URL)
@@ -31,24 +34,24 @@ def create_table():
             """)
         conn.commit()
 
-def seed_default_user():
-    with get_db() as conn:
-        with conn.cursor() as cursor:
-            cursor.execute(
-                "SELECT 1 FROM users WHERE usuario = %s",
-                ("Juscelino Buarque Apesar de Todo Dia",)
-            )
-            existe = cursor.fetchone()
-
-            if not existe:
-                cursor.execute(
-                    "INSERT INTO users (usuario, senha) VALUES (%s, %s)",
-                    ("Juscelino Buarque Apesar de Todo Dia", "Scooby-doo")
-                )
-        conn.commit()
+#def seed_default_user():
+ #   with get_db() as conn:
+  #      with conn.cursor() as cursor:
+   #         cursor.execute(
+    #            "SELECT 1 FROM users WHERE usuario = %s",
+     #           ("Daredevil",)
+      #      )
+       #     existe = cursor.fetchone()
+#
+ #           if not existe:
+  #              cursor.execute(
+   #                 "INSERT INTO users (usuario, senha) VALUES (%s, %s)",
+    #                ("Daredevil", "fiona 'n' cakes")
+     #           )
+      #  conn.commit()
 
 create_table()
-seed_default_user()
+#seed_default_user()
 
 @app.route("/")
 def home():
@@ -70,9 +73,12 @@ def logar():
     senha = request.form.get("senha", "").strip()
 
     if not usuario:
-        return "Usuário inválido."
+        flash("Usuário inválido.")
+        return redirect(url_for("home"))
+
     if not senha:
-        return "Senha inválida."
+        flash("Senha inválida.")
+        return redirect(url_for("home"))
 
     with get_db() as conn:
         with conn.cursor() as cursor:
@@ -85,7 +91,9 @@ def logar():
     if usuario_encontrado:
         session["usuario"] = usuario
         return redirect(url_for("home"))
-    return "Login inválido."
+
+    flash("Login inválido.")
+    return redirect(url_for("home"))
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -106,8 +114,14 @@ def filtroSala(sala):
             """, (sala,))
             atividades = cursor.fetchall()
 
+    atividades_705 = [a for a in atividades if a[4] == "705"]
+    atividades_704 = [a for a in atividades if a[4] == "704"]
     logado = "usuario" in session
-    return render_template("index.html", atividades=atividades, logado=logado)
+    return render_template("index.html",
+                            atividades=atividades,
+                            logado=logado,
+                            atividades_705=atividades_705,
+                            atividades_704=atividades_704)
 
 @app.route("/enviar", methods=["POST"])
 def enviar():
@@ -173,3 +187,4 @@ def delete(id):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
