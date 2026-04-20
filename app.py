@@ -36,14 +36,14 @@ def seed_default_user():
         with conn.cursor() as cursor:
             cursor.execute(
                 "SELECT 1 FROM users WHERE usuario = %s",
-                ("Daredevil",)
+                ("Juscelino Buarque Apesar de Todo Dia",)
             )
             existe = cursor.fetchone()
 
             if not existe:
                 cursor.execute(
                     "INSERT INTO users (usuario, senha) VALUES (%s, %s)",
-                    ("Daredevil", "fiona 'n' cakes")
+                    ("Juscelino Buarque Apesar de Todo Dia", "Scooby-doo")
                 )
         conn.commit()
 
