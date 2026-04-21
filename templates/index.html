@@ -73,6 +73,7 @@
           <dialog id="modal-sala4">
             <select id="materias-sala4">
               <option value="todas">Todas</option>
+              <option value="comunicados">Comunicados</option>
               <option value="matematica">Matemática</option>
               <option value="portugues">Português</option>
               <option value="geografia">Geografia</option>
@@ -89,6 +90,9 @@
                   <div class="atividade-topo">
                     <div class="atividade-info">
                       <h4>{{ atividade[1] }}</h4>
+                      {% if atividade[5] %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ atividade[5]) }}" alt="Imagem da atividade">
+                      {% endif %}
                       <p>{{ atividade[2] }}</p>
                       <span>{{ atividade[3] }}</span>
                     </div>
@@ -130,6 +134,7 @@
                       <label>
                         Matéria
                         <select name="materia">
+                          <option value="comunicados" {% if atividade[3]|lower == "comunicados" %}selected{% endif %}>Comunicados</option>
                           <option value="matematica" {% if atividade[3]|lower == "matematica" %}selected{% endif %}>Matemática</option>
                           <option value="portugues" {% if atividade[3]|lower == "portugues" %}selected{% endif %}>Português</option>
                           <option value="geografia" {% if atividade[3]|lower == "geografia" %}selected{% endif %}>Geografia</option>
@@ -151,7 +156,10 @@
             {% endif %}
 
             {% if logado %}
-              <form class="enviar" action="/enviar" method="POST">
+              <form class="enviar"
+               action="/enviar"
+               method="POST"
+               enctype="multipart/form-data">
                 <label>
                   Título
                   <input type="text" name="titulo" />
@@ -165,8 +173,14 @@
                 <input type="hidden" name="sala" value="704" />
 
                 <label>
+                  Imagem
+                  <input type="file" name="imagem" accept="image/*">
+                </label>
+
+                <label>
                   Matéria
                   <select name="materia">
+                    <option value="comunicados">Comunicados</option>
                     <option value="matematica">Matemática</option>
                     <option value="portugues">Português</option>
                     <option value="geografia">Geografia</option>
@@ -190,6 +204,7 @@
           <dialog id="modal-sala5">
             <select id="materias-sala5">
               <option value="todas">Todas</option>
+              <option value="comunicados">Comunicados</option>
               <option value="matematica">Matemática</option>
               <option value="portugues">Português</option>
               <option value="geografia">Geografia</option>
@@ -206,6 +221,9 @@
                   <div class="atividade-topo">
                     <div class="atividade-info">
                       <h4>{{ atividade[1] }}</h4>
+                      {% if atividade[5] %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ atividade[5]) }}" alt="Imagem da atividade">
+                      {% endif %}
                       <p>{{ atividade[2] }}</p>
                       <span>{{ atividade[3] }}</span>
                     </div>
@@ -247,6 +265,7 @@
                       <label>
                         Matéria
                         <select name="materia">
+                          <option value="comunicados" {% if atividade[3]|lower == "comunicados" %}selected{% endif %}>Comunicados</option>
                           <option value="matematica" {% if atividade[3]|lower == "matematica" %}selected{% endif %}>Matemática</option>
                           <option value="portugues" {% if atividade[3]|lower == "portugues" %}selected{% endif %}>Português</option>
                           <option value="geografia" {% if atividade[3]|lower == "geografia" %}selected{% endif %}>Geografia</option>
@@ -268,7 +287,11 @@
             {% endif %}
 
             {% if logado %}
-              <form class="enviar" action="/enviar" method="POST">
+              <form class="enviar"
+               action="/enviar"
+               method="POST"
+               enctype="multipart/form-data">
+               
                 <label>
                   Título
                   <input type="text" name="titulo" />
@@ -282,8 +305,14 @@
                 <input type="hidden" name="sala" value="705" />
 
                 <label>
+                  Imagem
+                  <input type="file" name="imagem" accept="image/*">
+                </label>
+
+                <label>
                   Matéria
                   <select name="materia">
+                    <option value="comunicados">Comunicados</option>
                     <option value="matematica">Matemática</option>
                     <option value="portugues">Português</option>
                     <option value="geografia">Geografia</option>
