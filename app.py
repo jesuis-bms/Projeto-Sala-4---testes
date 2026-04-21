@@ -35,7 +35,6 @@ def create_table():
                     imagem TEXT
                 )
             """)
-            cursor.execute("""ALTER TABLE atividades ADD COLUMN IF NOT EXISTS imagem TEXT;""")
         conn.commit()
 
 create_table()
