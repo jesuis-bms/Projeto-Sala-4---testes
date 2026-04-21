@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Projeto Sala 4</title>
-    <link rel="icon" href="{{ url_for('static', 'img', filename='logo.emdb.ico') }}" />
+    <link rel="icon" href="img/logo.emdb.ico" />
     <link rel="stylesheet" href="{{ url_for('static', filename='beleza.css') }}" />
   </head>
   <body>
@@ -24,22 +24,24 @@
 
             <label>
               Usuário:
-              <input type="text" name="user" id="user">
+              <input type="text" name="user" id="user" />
               Senha:
-              <input type="password" name="senha" id="senha">
+              <input type="password" name="senha" id="senha" />
             </label>
 
             <button type="submit" id="logar" name="logar">Entrar</button>
           </form>
           <button id="fecharlogin-modal">Sair</button>
         </dialog>
+
         {% if logado %}
           <form action="/logout" method="POST">
             <button id="logout" type="submit">Sair</button>
           </form>
-          {% else %}
+        {% else %}
           <button id="login">Entre por aqui!</button>
-          {% endif %}
+        {% endif %}
+
         <h1>Projeto Sala 4</h1>
       </div>
 
@@ -48,6 +50,7 @@
         Municipal Dom Bosco em busca da acessibilidade de outros alunos da
         mesma.
       </p>
+
       <button id="sumario-btn">Sumário</button>
 
       <nav id="sumario" class="sumario">
@@ -61,105 +64,248 @@
 
       <hr />
     </header>
+
     <main>
       <section id="salas">
         <h3>Está procurando por atividades? Selecione sua sala abaixo:</h3>
+
         <div class="atividades">
           <dialog id="modal-sala4">
-
-              <select id="materias-sala4">
-                <option value="matematica">Matemática</option>
-                <option value="portugues">Português</option>
-                <option value="geografia">Geografia</option>
-                <option value="historia">História</option>
-                <option value="ciencias">Ciências</option>
-                <option value="arte">Arte</option>
-                <option value="ingles">Inglês</option>
-                <option value="geometria">Geometria</option>
-              </select>
-            
-            {% if atividades_704 %}
-              {% for atividade in atividades_704 %}
-                <p>{{ atividade[1] }} - {{ atividade[2] }} - {{ atividade[3] }}</p>
-              {% endfor %}
-            {% else %}
-              <p>Ops! Não temos nada aqui também...</p>
-            {% endif %}
-              <button id="fecharModal-sala4">Fechar</button>
-              
-            {% if logado %}
-              <form class="enviar" action="/enviar" method="POST">
-                <label>
-                  Título
-                  <input type="text" name="titulo">
-                </label>
-
-               <label>
-                  Descrição
-                  <input type="text" name="descricao">
-                </label>
-
-                  <input type="hidden" name="sala" value="704">
-
-                <label>
-                  Matéria
-                  <input type="text" name="materia">
-                </label>
-
-                <button class="add-cont" type="submit">Adicionar conteúdo</button>
-              </form>
-            {% endif %}
-
-          </dialog>
-          <button id="atividades-704">Sala 704</button>
-          
-          <dialog id="modal-sala5">
-            <select id="materias-sala5">
+            <select id="materias-sala4">
+              <option value="todas">Todas</option>
               <option value="matematica">Matemática</option>
               <option value="portugues">Português</option>
               <option value="geografia">Geografia</option>
               <option value="historia">História</option>
               <option value="ciencias">Ciências</option>
               <option value="arte">Arte</option>
-              <option value="ingles">Inglê</option>
+              <option value="ingles">Inglês</option>
               <option value="geometria">Geometria</option>
             </select>
-            
-            {% if atividades_705 %}
-              {% for atividade in atividades_705 %}
-                <p>{{ atividade[1] }} - {{ atividade[2] }} - {{ atividade[3] }}</p>
+
+            {% if atividades_704 %}
+              {% for atividade in atividades_704 %}
+                <div class="atividade-card" data-materia="{{ atividade[3]|lower }}">
+                  <div class="atividade-topo">
+                    <div class="atividade-info">
+                      <h4>{{ atividade[1] }}</h4>
+                      <p>{{ atividade[2] }}</p>
+                      <span>{{ atividade[3] }}</span>
+                    </div>
+
+                    {% if logado %}
+                      <div class="atividade-menu-box">
+                        <button type="button" class="menu-btn">⋮</button>
+
+                        <div class="atividade-menu oculto">
+                          <button type="button" class="editar-btn">Editar</button>
+
+                          <form action="/delete/{{ atividade[0] }}" method="POST">
+                            <input type="hidden" name="sala" value="704" />
+                            <button type="submit">Apagar</button>
+                          </form>
+                        </div>
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  {% if logado %}
+                    <form
+                      class="editar-form oculto"
+                      action="/update/{{ atividade[0] }}"
+                      method="POST"
+                    >
+                      <input type="hidden" name="sala" value="704" />
+
+                      <label>
+                        Título
+                        <input type="text" name="titulo" value="{{ atividade[1] }}" />
+                      </label>
+
+                      <label>
+                        Descrição
+                        <input type="text" name="descricao" value="{{ atividade[2] }}" />
+                      </label>
+
+                      <label>
+                        Matéria
+                        <select name="materia">
+                          <option value="matematica" {% if atividade[3]|lower == "matematica" %}selected{% endif %}>Matemática</option>
+                          <option value="portugues" {% if atividade[3]|lower == "portugues" %}selected{% endif %}>Português</option>
+                          <option value="geografia" {% if atividade[3]|lower == "geografia" %}selected{% endif %}>Geografia</option>
+                          <option value="historia" {% if atividade[3]|lower == "historia" %}selected{% endif %}>História</option>
+                          <option value="ciencias" {% if atividade[3]|lower == "ciencias" %}selected{% endif %}>Ciências</option>
+                          <option value="arte" {% if atividade[3]|lower == "arte" %}selected{% endif %}>Arte</option>
+                          <option value="ingles" {% if atividade[3]|lower == "ingles" %}selected{% endif %}>Inglês</option>
+                          <option value="geometria" {% if atividade[3]|lower == "geometria" %}selected{% endif %}>Geometria</option>
+                        </select>
+                      </label>
+
+                      <button type="submit">Salvar</button>
+                    </form>
+                  {% endif %}
+                </div>
               {% endfor %}
             {% else %}
               <p>Ops! Não temos nada aqui também...</p>
             {% endif %}
-              <button id="fecharModal-sala5">Fechar</button>
-            
+
             {% if logado %}
               <form class="enviar" action="/enviar" method="POST">
                 <label>
                   Título
-                  <input type="text" name="titulo">
+                  <input type="text" name="titulo" />
                 </label>
 
-               <label>
+                <label>
                   Descrição
-                  <input type="text" name="descricao">
+                  <input type="text" name="descricao" />
                 </label>
 
-                  <input type="hidden" name="sala" value="705">
+                <input type="hidden" name="sala" value="704" />
 
                 <label>
                   Matéria
-                  <input type="text" name="materia">
+                  <select name="materia">
+                    <option value="matematica">Matemática</option>
+                    <option value="portugues">Português</option>
+                    <option value="geografia">Geografia</option>
+                    <option value="historia">História</option>
+                    <option value="ciencias">Ciências</option>
+                    <option value="arte">Arte</option>
+                    <option value="ingles">Inglês</option>
+                    <option value="geometria">Geometria</option>
+                  </select>
                 </label>
 
                 <button class="add-cont" type="submit">Adicionar conteúdo</button>
               </form>
             {% endif %}
+
+            <button id="fecharModal-sala4">Fechar</button>
           </dialog>
+
+          <button id="atividades-704">Sala 704</button>
+
+          <dialog id="modal-sala5">
+            <select id="materias-sala5">
+              <option value="todas">Todas</option>
+              <option value="matematica">Matemática</option>
+              <option value="portugues">Português</option>
+              <option value="geografia">Geografia</option>
+              <option value="historia">História</option>
+              <option value="ciencias">Ciências</option>
+              <option value="arte">Arte</option>
+              <option value="ingles">Inglês</option>
+              <option value="geometria">Geometria</option>
+            </select>
+
+            {% if atividades_705 %}
+              {% for atividade in atividades_705 %}
+                <div class="atividade-card" data-materia="{{ atividade[3]|lower }}">
+                  <div class="atividade-topo">
+                    <div class="atividade-info">
+                      <h4>{{ atividade[1] }}</h4>
+                      <p>{{ atividade[2] }}</p>
+                      <span>{{ atividade[3] }}</span>
+                    </div>
+
+                    {% if logado %}
+                      <div class="atividade-menu-box">
+                        <button type="button" class="menu-btn">⋮</button>
+
+                        <div class="atividade-menu oculto">
+                          <button type="button" class="editar-btn">Editar</button>
+
+                          <form action="/delete/{{ atividade[0] }}" method="POST">
+                            <input type="hidden" name="sala" value="705" />
+                            <button type="submit">Apagar</button>
+                          </form>
+                        </div>
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  {% if logado %}
+                    <form
+                      class="editar-form oculto"
+                      action="/update/{{ atividade[0] }}"
+                      method="POST"
+                    >
+                      <input type="hidden" name="sala" value="705" />
+
+                      <label>
+                        Título
+                        <input type="text" name="titulo" value="{{ atividade[1] }}" />
+                      </label>
+
+                      <label>
+                        Descrição
+                        <input type="text" name="descricao" value="{{ atividade[2] }}" />
+                      </label>
+
+                      <label>
+                        Matéria
+                        <select name="materia">
+                          <option value="matematica" {% if atividade[3]|lower == "matematica" %}selected{% endif %}>Matemática</option>
+                          <option value="portugues" {% if atividade[3]|lower == "portugues" %}selected{% endif %}>Português</option>
+                          <option value="geografia" {% if atividade[3]|lower == "geografia" %}selected{% endif %}>Geografia</option>
+                          <option value="historia" {% if atividade[3]|lower == "historia" %}selected{% endif %}>História</option>
+                          <option value="ciencias" {% if atividade[3]|lower == "ciencias" %}selected{% endif %}>Ciências</option>
+                          <option value="arte" {% if atividade[3]|lower == "arte" %}selected{% endif %}>Arte</option>
+                          <option value="ingles" {% if atividade[3]|lower == "ingles" %}selected{% endif %}>Inglês</option>
+                          <option value="geometria" {% if atividade[3]|lower == "geometria" %}selected{% endif %}>Geometria</option>
+                        </select>
+                      </label>
+
+                      <button type="submit">Salvar</button>
+                    </form>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <p>Ops! Não temos nada aqui também...</p>
+            {% endif %}
+
+            {% if logado %}
+              <form class="enviar" action="/enviar" method="POST">
+                <label>
+                  Título
+                  <input type="text" name="titulo" />
+                </label>
+
+                <label>
+                  Descrição
+                  <input type="text" name="descricao" />
+                </label>
+
+                <input type="hidden" name="sala" value="705" />
+
+                <label>
+                  Matéria
+                  <select name="materia">
+                    <option value="matematica">Matemática</option>
+                    <option value="portugues">Português</option>
+                    <option value="geografia">Geografia</option>
+                    <option value="historia">História</option>
+                    <option value="ciencias">Ciências</option>
+                    <option value="arte">Arte</option>
+                    <option value="ingles">Inglês</option>
+                    <option value="geometria">Geometria</option>
+                  </select>
+                </label>
+
+                <button class="add-cont" type="submit">Adicionar conteúdo</button>
+              </form>
+            {% endif %}
+
+            <button id="fecharModal-sala5">Fechar</button>
+          </dialog>
+
           <button id="atividades-705">Sala 705</button>
         </div>
       </section>
+
       <section id="sobre">
         <h2>Quem nós somos?</h2>
         <p>
@@ -167,8 +313,8 @@
           estudantes do sétimo ano do ensino fundamental Esther Gomes, Bernard
           Luiz, Lucas Reis e Jorge para a acessibilidade dos alunos da Escola
           Municipal Dom Bosco. Como a maioria dos envolvidos nesse projeto
-          (Lucas, Bernard e Jorge) são da sala 704, o nome "<i>Projeto Sala 4</i
-          >" foi escolhido de forma unânime.
+          (Lucas, Bernard e Jorge) são da sala 704, o nome "<i>Projeto Sala 4</i>"
+          foi escolhido de forma unânime.
         </p>
       </section>
 
@@ -176,10 +322,9 @@
         <h2>Onde podemos saber mais sobre o Projeto?</h2>
         <p>
           O Projeto tem uma página no
-          <a href="https://github.com/jesuis-bms/Projeto-Sala-4---testes"
-            >GitHub</a
-          >, onde falamos mais sobre e onde estão tanto os arquivos quanto
-          códigos usados na produção desse site.
+          <a href="https://github.com/jesuis-bms/Projeto-Sala-4---testes">GitHub</a>,
+          onde falamos mais sobre e onde estão tanto os arquivos quanto códigos
+          usados na produção desse site.
         </p>
       </section>
     </main>
@@ -191,6 +336,7 @@
         Bosco que é apoiadora e, portanto, autoriza nosso uso de seu 'emblema'.
       </p>
     </footer>
+
     <section id="contato">
       <address>
         <h2>Escola Municipal Dom Bosco</h2>
@@ -198,13 +344,15 @@
         <p>Telefone: <a href="tel:+5531988883295">(31) 98888-3295</a></p>
         <p>
           Email:
-          <a href="mailto:emdb@edu.pbh.gov.br" target="_blank"
-            >emdb@edu.pbh.gov.br</a
-          >
+          <a href="mailto:emdb@edu.pbh.gov.br" target="_blank">
+            emdb@edu.pbh.gov.br
+          </a>
         </p>
       </address>
     </section>
+
     <hr />
+
     <div id="agradecimentos">
       <p>
         Sem quaisquer interesses financeiros, apenas ajudar como objetivo. Site
@@ -212,6 +360,7 @@
       </p>
       <p>Site desenvolvido por <span>Bernard Luiz Marques da Silva</span>.</p>
     </div>
+
     <script src="{{ url_for('static', filename='index.js') }}"></script>
   </body>
 </html>
