@@ -1,5 +1,7 @@
 import os
+import time
 import psycopg
+from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 app = Flask(__name__)
@@ -29,7 +31,8 @@ def create_table():
                     titulo TEXT NOT NULL,
                     descricao TEXT NOT NULL,
                     materia TEXT NOT NULL,
-                    sala TEXT NOT NULL
+                    sala TEXT NOT NULL,
+                    imagem TEXT
                 )
             """)
         conn.commit()
@@ -46,7 +49,7 @@ def home():
     with get_db() as conn:
         with conn.cursor() as cursor:
             cursor.execute("""
-                SELECT id, titulo, descricao, materia, sala
+                SELECT id, titulo, descricao, materia, sala, imagem
                 FROM atividades
                 ORDER BY id DESC
             """)
@@ -104,7 +107,7 @@ def filtroSala(sala):
     with get_db() as conn:
         with conn.cursor() as cursor:
             cursor.execute("""
-                SELECT id, titulo, descricao, materia, sala
+                SELECT id, titulo, descricao, materia, sala, imagem
                 FROM atividades
                 WHERE sala = %s
                 ORDER BY id DESC
@@ -131,6 +134,8 @@ def enviar():
     descricao = request.form.get("descricao", "").strip()
     sala = request.form.get("sala", "").strip()
     materia = request.form.get("materia", "").strip()
+    imagem = request.files.get("imagem")
+    nome_imagem = None
 
     if not titulo:
         return "Título inválido. Digite algo."
@@ -140,13 +145,22 @@ def enviar():
         return "Sala inválida. Tente novamente."
     if not materia:
         return "Matéria inválida. Tente novamente."
+    if imagem and imagem.filename:
+        nome_original = secure_filename(imagem.filename)
+        nome_imagem = f"{sala}_{int(time.time())}_{nome_original}"
+
+        upload_folder = os.path.join("static", "uploads")
+        os.makedirs(upload_folder, exist_ok=True)
+
+        caminho = os.path.join(upload_folder, nome_imagem)
+        imagem.save(caminho)
 
     with get_db() as conn:
         with conn.cursor() as cursor:
             cursor.execute("""
-                INSERT INTO atividades (titulo, descricao, sala, materia)
-                VALUES (%s, %s, %s, %s)
-            """, (titulo, descricao, sala, materia))
+                INSERT INTO atividades (titulo, descricao, sala, materia, imagem)
+                VALUES (%s, %s, %s, %s, %s )
+            """, (titulo, descricao, sala, materia, nome_imagem))
         conn.commit()
 
     return redirect(url_for("filtroSala", sala=sala))
