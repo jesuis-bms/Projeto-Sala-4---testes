@@ -137,6 +137,11 @@
                       </label>
 
                       <label>
+                        Imagem
+                        <input type="file" name="imagens" accept="image/*" multiple>
+                      </label>
+
+                      <label>
                         Matéria
                         <select name="materia">
                           <option value="comunicados" {% if atividade[3]|lower == "comunicados" %}selected{% endif %}>Comunicados</option>
@@ -267,6 +272,11 @@
                       <label>
                         Descrição
                         <textarea name="descricao">{{ atividade[2] }}</textarea>
+                      </label>
+
+                      <label>
+                        Imagem
+                        <input type="file" name="imagens" accept="image/*" multiple>
                       </label>
 
                       <label>
