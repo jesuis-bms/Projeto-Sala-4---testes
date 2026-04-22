@@ -23,6 +23,35 @@ document.querySelectorAll(".atividade-card").forEach((card) => {
   const editarBtn = card.querySelector(".editar-btn");
   const editarForm = card.querySelector(".editar-form");
 
+  const imagemModal = document.getElementById("imagem-modal");
+  const fecharImagemModal = document.getElementById("fechar-imagem-modal");
+  const imagemModalConteudo = document.getElementById("imagem-modal-conteudo");
+
+  document.querySelectorAll(".galeria").forEach((galeria) => {
+    const thumbs = galeria.querySelectorAll(".galeria-thumb");
+
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener("click", () => {
+        imagemModalConteudo.innerHTML = "";
+
+        thumbs.forEach((img) => {
+          const novaImg = document.createElement("img");
+          novaImg.src = img.src;
+          novaImg.alt = "Imagem da atividade";
+          imagemModalConteudo.appendChild(novaImg);
+        });
+
+        imagemModal.showModal();
+      });
+    });
+  });
+
+  if (fecharImagemModal && imagemModal) {
+    fecharImagemModal.addEventListener("click", () => {
+      imagemModal.close();
+    });
+  }
+
   if (menuBtn && menu) {
     menuBtn.addEventListener("click", () => {
       menu.classList.toggle("oculto");
