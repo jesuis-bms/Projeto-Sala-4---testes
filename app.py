@@ -44,6 +44,12 @@ def create_table():
                     imagem TEXT
                 )
             """)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS imagens (
+                id SERIAL PRIMARY KEY
+                atividade_id INTEGER NOT NULL
+                url TEXT NOT NULL
+            """)
         conn.commit()
 
 create_table()
@@ -143,7 +149,7 @@ def enviar():
     descricao = request.form.get("descricao", "").strip()
     sala = request.form.get("sala", "").strip()
     materia = request.form.get("materia", "").strip()
-    imagem = request.files.get("imagem")
+    imagens = request.files.getlist("imagens")
     nome_imagem = None
 
     if not titulo:
@@ -154,19 +160,28 @@ def enviar():
         return "Sala inválida. Tente novamente."
     if not materia:
         return "Matéria inválida. Tente novamente."
-        
-    if imagem and imagem.filename:
-        resultado = cloudinary.uploader.upload(imagem)
-        nome_imagem = resultado["secure_url"]
 
     with get_db() as conn:
         with conn.cursor() as cursor:
             cursor.execute("""
-                INSERT INTO atividades (titulo, descricao, sala, materia, imagem)
-                VALUES (%s, %s, %s, %s, %s )
-            """, (titulo, descricao, sala, materia, nome_imagem))
-        conn.commit()
+                INSERT INTO atividades (titulo, descricao, sala, materia)
+                VALUES (%s, %s, %s, %s)
+                RETURNING id
+            """, (titulo, descricao, sala, materia))
+            atividade_id = cursor.fetchone()[0]
 
+     for imagem in imagens:
+        if imagem and imagem.filename:
+            resultado = cloudinary.uploader.upload(imagem)
+            nome_imagem = resultado["secure_url"]
+
+        cursor.execute("""
+            INSERT INTO imagens (atividade_id, url)
+            VALUES (%s, %s)
+            """, (atividade_id, url_imagem))
+
+    conn.commit(
+    
     return redirect(url_for("filtroSala", sala=sala))
 
 @app.route("/update/<int:id>", methods=["POST"])
