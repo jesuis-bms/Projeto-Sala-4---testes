@@ -134,6 +134,48 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.galeria-thumb {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#imagem-modal {
+  width: min(90vw, 900px);
+  max-height: 85vh;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+#imagem-modal::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+#imagem-modal-conteudo {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+#imagem-modal-conteudo img {
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #00000010;
+}
+
 #salas {
   text-align: center;
   font-size: 20px;
