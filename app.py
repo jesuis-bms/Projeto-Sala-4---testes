@@ -1,9 +1,7 @@
 import os
-import time
 import psycopg
 import cloudinary
 import cloudinary.uploader
-from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 
@@ -156,14 +154,8 @@ def enviar():
         return "Sala inválida. Tente novamente."
     if not materia:
         return "Matéria inválida. Tente novamente."
+        
     if imagem and imagem.filename:
-        nome_original = secure_filename(imagem.filename)
-        nome_imagem = f"{sala}_{int(time.time())}_{nome_original}"
-
-        upload_folder = os.path.join("static", "uploads")
-        os.makedirs(upload_folder, exist_ok=True)
-
-        caminho = os.path.join(upload_folder, nome_imagem)
         resultado = cloudinary.uploader.upload(imagem)
         nome_imagem = resultado["secure_url"]
 
