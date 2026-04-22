@@ -174,7 +174,7 @@
 
                 <label>
                   Imagem
-                  <img src="{{ atividade[5] }}" alt="Imagem da atividade">
+                  <input type="file" name="image" >
                 </label>
 
                 <label>
@@ -222,7 +222,7 @@
                     <div class="atividade-info">
                       <h4>{{ atividade[1] }}</h4>
                       {% if atividade[5] %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ atividade[5]) }}" alt="Imagem da atividade">
+                        <img src="{{ atividade[5]  }}" alt="Imagem da atividade">
                       {% endif %}
                       <p>{{ atividade[2] }}</p>
                       <span>{{ atividade[3] }}</span>
@@ -259,7 +259,7 @@
 
                       <label>
                         Descrição
-                        <input type="text" name="descricao" value="{{ atividade[2] }}" />
+                        <<input type="file" name="image" accept="image/*">>
                       </label>
 
                       <label>
@@ -306,7 +306,7 @@
 
                 <label>
                   Imagem
-                  <img src="{{ atividade[5] }}" alt="Imagem da atividade">
+                  <input type="file" name="image" accept="image/*">
                 </label>
 
                 <label>
