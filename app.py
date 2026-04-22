@@ -46,8 +46,8 @@ def create_table():
             """)
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS imagens (
-                id SERIAL PRIMARY KEY
-                atividade_id INTEGER NOT NULL
+                id SERIAL PRIMARY KEY,
+                atividade_id INTEGER NOT NULL,
                 url TEXT NOT NULL
             """)
         conn.commit()
