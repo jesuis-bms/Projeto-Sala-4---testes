@@ -40,8 +40,7 @@ def create_table():
                     titulo TEXT NOT NULL,
                     descricao TEXT NOT NULL,
                     materia TEXT NOT NULL,
-                    sala TEXT NOT NULL,
-                    imagem TEXT
+                    sala TEXT NOT NULL
                 )
             """)
             cursor.execute("""
