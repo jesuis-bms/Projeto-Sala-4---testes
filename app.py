@@ -140,10 +140,10 @@ def filtroSala(sala):
 
             cursor.execute("""
                 SELECT id, titulo, descricao, materia, sala
-                FROM atividades 
+                FROM atividades
                 WHERE sala = %s
                 ORDER BY id DESC
-            """)
+            """, (sala,))
             atividades = cursor.fetchall()
             
             cursor.execute("SELECT atividade_id, url FROM imagens")
