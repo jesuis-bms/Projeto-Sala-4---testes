@@ -150,7 +150,6 @@ def enviar():
     sala = request.form.get("sala", "").strip()
     materia = request.form.get("materia", "").strip()
     imagens = request.files.getlist("imagens")
-    nome_imagem = None
 
     if not titulo:
         return "Título inválido. Digite algo."
@@ -168,20 +167,21 @@ def enviar():
                 VALUES (%s, %s, %s, %s)
                 RETURNING id
             """, (titulo, descricao, sala, materia))
+
             atividade_id = cursor.fetchone()[0]
 
-     for imagem in imagens:
-        if imagem and imagem.filename:
-            resultado = cloudinary.uploader.upload(imagem)
-            nome_imagem = resultado["secure_url"]
+            for imagem in imagens:
+                if imagem and imagem.filename:
+                    resultado = cloudinary.uploader.upload(imagem)
+                    url_imagem = resultado["secure_url"]
 
-        cursor.execute("""
-            INSERT INTO imagens (atividade_id, url)
-            VALUES (%s, %s)
-            """, (atividade_id, url_imagem))
+                    cursor.execute("""
+                        INSERT INTO imagens (atividade_id, url)
+                        VALUES (%s, %s)
+                    """, (atividade_id, url_imagem))
 
-    conn.commit(
-    
+        conn.commit()
+
     return redirect(url_for("filtroSala", sala=sala))
 
 @app.route("/update/<int:id>", methods=["POST"])
