@@ -5,20 +5,13 @@ if (sumario && sumarioBtn) {
   sumarioBtn.addEventListener("click", () => sumario.classList.toggle("show"));
 }
 
+const modal4 = document.getElementById("modal-sala4");
+const modal5 = document.getElementById("modal-sala5");
+
 const abrirModal5 = document.getElementById("atividades-705");
 const abrirModal4 = document.getElementById("atividades-704");
 const fecharModal4 = document.getElementById("fecharModal-sala4");
 const fecharModal5 = document.getElementById("fecharModal-sala5");
-
-const abrirLogin = document.getElementById("login");
-const fecharLogin = document.getElementById("fecharlogin-modal");
-const modalLogin = document.getElementById("login-modal");
-const erroLogin = document.querySelector(".erro-login");
-
-const caminho = window.location.pathname;
-
-const modal4 = document.getElementById("modal-sala4");
-const modal5 = document.getElementById("modal-sala5");
 
 const caminho = window.location.pathname;
 
