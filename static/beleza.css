@@ -182,6 +182,7 @@
 }
 
 .add-cont,
+#fechar-imagem-modal,
 #logar,
 #fecharlogin-modal,
 #materias-sala4,
@@ -261,10 +262,10 @@
 
 #agradecimentos {
   text-align: center;
-  background-color: grey;
+  background-color: Silver;
   color: white;
   max-width: 100%;
-  padding: 10%;
+  padding: 5%;
 }
 
 .enviar,
