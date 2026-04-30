@@ -1,5 +1,6 @@
 import os
 import psycopg
+import markdown
 import cloudinary
 import cloudinary.uploader
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -72,6 +73,16 @@ def home():
                 ORDER BY id DESC
             """)
             atividades = cursor.fetchall()
+
+            atividades_processadas = []
+
+            for atividade in atividades:
+                descricao_html = markdown.markdown(atividade[2])
+                atividade = list(atividade)
+                atividade[2] = descricao_html
+                atividades_processadas.append(atividade)
+
+            atividades = atividades_processadas
 
             cursor.execute("SELECT atividade_id, url FROM imagens")
             todas = cursor.fetchall()
@@ -186,6 +197,16 @@ def filtroSala(sala):
                 ORDER BY id DESC
             """, (sala,))
             atividades = cursor.fetchall()
+
+            atividades_processadas = []
+
+            for atividade in atividades:
+                descricao_html = markdown.markdown(atividade[2])
+                atividade = list(atividade)
+                atividade[2] = descricao_html
+                atividades_processadas.append(atividade)
+
+            atividades = atividades_processadas
             
             cursor.execute("SELECT atividade_id, url FROM imagens")
             todas = cursor.fetchall()
