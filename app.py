@@ -77,7 +77,7 @@ def home():
             atividades_processadas = []
 
             for atividade in atividades:
-                descricao_html = markdown.markdown(atividade[2])
+                descricao_html = markdown.markdown(atividade[2], extensions=["nl2br"])
                 atividade = list(atividade)
                 atividade[2] = descricao_html
                 atividades_processadas.append(atividade)
@@ -201,7 +201,7 @@ def filtroSala(sala):
             atividades_processadas = []
 
             for atividade in atividades:
-                descricao_html = markdown.markdown(atividade[2])
+                descricao_html = markdown.markdown(atividade[2], extensions=["nl2br"])
                 atividade = list(atividade)
                 atividade[2] = descricao_html
                 atividades_processadas.append(atividade)
