@@ -373,23 +373,3 @@ a:hover {
 li {
   list-style: square;
 } 
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-dialog {
-  width: min(90vw, 700px);
-  max-height: 85vh;
-  overflow-y: auto;
-}
-
-@media (max-width: 600px) {
-
-  .enviar,
-  #login-form {
-    width: 100%;
-  }
-
-}
